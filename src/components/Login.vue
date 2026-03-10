@@ -9,3 +9,20 @@
     <button type="submit">Login</button>
   </form>
 </template>
+<style scoped>
+.login {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  padding: 10px;
+  margin: 0 auto;
+}
+.login input,
+button {
+  border: 1px solid black;
+  border-radius: 5px;
+}
+hr {
+  margin: 10px, 0;
+}
+</style>
