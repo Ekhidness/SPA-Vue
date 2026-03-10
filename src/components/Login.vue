@@ -9,6 +9,30 @@
     <button type="submit">Login</button>
   </form>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      username: "",
+      password: "",
+    };
+  },
+  methods: {
+    login() {
+      const userData = {
+        username: this.username,
+        password: this.password,
+      };
+
+      this.$store
+        .dispatch(AUTH_REQUEST, userData)
+        .then(() => this.$router.push("/"));
+    },
+  },
+};
+</script>
+
 <style scoped>
 .login {
   display: flex;
