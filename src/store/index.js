@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-
+import { loginRequest } from "@/utils/api.js";
 export default createStore({
   state: {
     token: localStorage.getItem("myAppToken") || "",
