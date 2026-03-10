@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import { loginRequest } from "@/utils/api.js";
+
 export default createStore({
   state: {
     token: localStorage.getItem("myAppToken") || "",
@@ -10,9 +11,11 @@ export default createStore({
   mutations: {
     AUTH_SUCCESS: (state, token) => {
       state.token = token;
+      localStorage.setItem("myAppToken", token);
     },
     AUTH_ERROR: (state) => {
       state.token = "";
+      localStorage.removeItem("myAppToken");
     },
   },
   actions: {
@@ -21,13 +24,11 @@ export default createStore({
         loginRequest(user)
           .then((token) => {
             commit("AUTH_SUCCESS", token);
-            localStorage.setItem("myAppToken", token);
             resolve();
           })
-          .catch(() => {
+          .catch((error) => {
             commit("AUTH_ERROR");
-            localStorage.removeItem("myAppToken");
-            reject();
+            reject(error);
           });
       });
     },

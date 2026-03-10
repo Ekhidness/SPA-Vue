@@ -9,7 +9,16 @@ export const loginRequest = (user) => {
       },
       body: JSON.stringify(user),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((data) => {
+            const error = new Error("Login failed");
+            error.response = data;
+            throw error;
+          });
+        }
+        return response.json();
+      })
       .then((result) => resolve(result.data.user_token))
       .catch((error) => {
         reject(error);
