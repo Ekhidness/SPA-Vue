@@ -10,7 +10,7 @@
     />
     <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
 
-    <label>Password</label>
+    <label>Пароль</label>
     <input
       type="password"
       required
