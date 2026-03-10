@@ -30,6 +30,24 @@ const routes = [
     component: () => import("../components/Login.vue"),
     beforeEnter: ifNotAuthenticated,
   },
+  {
+    path: "/register",
+    name: "register",
+    component: () => import("../components/Register.vue"),
+    beforeEnter: ifNotAuthenticated,
+  },
+  {
+    path: "/cart",
+    name: "cart",
+    component: () => import("../components/Cart.vue"),
+    beforeEnter: ifAuthenticated,
+  },
+  {
+    path: "/orders",
+    name: "orders",
+    component: () => import("../components/Orders.vue"),
+    beforeEnter: ifAuthenticated,
+  },
 ];
 
 const router = createRouter({
