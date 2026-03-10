@@ -9,6 +9,7 @@
       :class="{ error: errors.email }"
     />
     <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
+
     <label>Password</label>
     <input
       type="password"
@@ -17,23 +18,35 @@
       :class="{ error: errors.password }"
     />
     <span v-if="errors.password" class="error-text">{{ errors.password }}</span>
+
     <hr />
     <button type="submit">Login</button>
     <button type="button" @click="goHome">Назад</button>
   </form>
 </template>
+
 <script>
 export default {
   data() {
     return {
-      form: { email: "", password: "" },
-      errors: { email: "", password: "" },
+      form: {
+        email: "",
+        password: "",
+      },
+      errors: {
+        email: "",
+        password: "",
+      },
     };
   },
   methods: {
     login() {
       this.errors = { email: "", password: "" };
-      const userData = { email: this.form.email, password: this.form.password };
+      const userData = {
+        email: this.form.email,
+        password: this.form.password,
+      };
+
       this.$store
         .dispatch("AUTH_REQUEST", userData)
         .then(() => this.$router.push("/"))
@@ -55,6 +68,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .login {
   display: flex;

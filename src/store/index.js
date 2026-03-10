@@ -1,50 +1,58 @@
-import { createStore } from "vuex";
-import { loginRequest, registerRequest } from "@/utils/api.js";
+import { createRouter, createWebHistory } from "vue-router";
+import store from "@/store";
 
-export default createStore({
-  state: {
-    token: localStorage.getItem("myAppToken") || "",
+const ifNotAuthenticated = (to, from, next) => {
+  if (!store.getters.isAuthenticated) {
+    next();
+    return;
+  }
+  next("/");
+};
+
+const ifAuthenticated = (to, from, next) => {
+  if (store.getters.isAuthenticated) {
+    next();
+    return;
+  }
+  next("/login");
+};
+
+const routes = [
+  {
+    path: "/",
+    name: "home",
+    component: () => import("../views/HomeView.vue"),
+    beforeEnter: ifAuthenticated,
   },
-  getters: {
-    isAuthenticated: (state) => !!state.token,
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("../components/Login.vue"),
+    beforeEnter: ifNotAuthenticated,
   },
-  mutations: {
-    AUTH_SUCCESS: (state, token) => {
-      state.token = token;
-      localStorage.setItem("myAppToken", token);
-    },
-    AUTH_ERROR: (state) => {
-      state.token = "";
-      localStorage.removeItem("myAppToken");
-    },
+  {
+    path: "/register",
+    name: "register",
+    component: () => import("../components/Register.vue"),
+    beforeEnter: ifNotAuthenticated,
   },
-  actions: {
-    AUTH_REQUEST: ({ commit }, user) => {
-      return new Promise((resolve, reject) => {
-        loginRequest(user)
-          .then((token) => {
-            commit("AUTH_SUCCESS", token);
-            resolve();
-          })
-          .catch((error) => {
-            commit("AUTH_ERROR");
-            reject(error);
-          });
-      });
-    },
-    REGISTER_REQUEST: ({ commit }, user) => {
-      return new Promise((resolve, reject) => {
-        registerRequest(user)
-          .then((token) => {
-            commit("AUTH_SUCCESS", token);
-            resolve();
-          })
-          .catch((error) => {
-            commit("AUTH_ERROR");
-            reject(error);
-          });
-      });
-    },
+  {
+    path: "/cart",
+    name: "cart",
+    component: () => import("../components/Cart.vue"),
+    beforeEnter: ifAuthenticated,
   },
-  modules: {},
+  {
+    path: "/orders",
+    name: "orders",
+    component: () => import("../components/Orders.vue"),
+    beforeEnter: ifAuthenticated,
+  },
+];
+
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
 });
+
+export default router;
