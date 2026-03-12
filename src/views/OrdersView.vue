@@ -9,8 +9,8 @@
 
     <div v-else>
       <div v-for="order in orders" :key="order.id" class="order-item">
-        <h3>Заказ #{{ order.id }}</h3>
-        <p><strong>Сумма заказа:</strong> {{ order.order_price }} ₽</p>
+        <h3>Заказ №{{ order.id }}</h3>
+        <p><strong>Сумма заказа:</strong> {{ order.order_price }} руб.</p>
       </div>
       <router-link to="/" class="back-link">Вернуться в каталог</router-link>
     </div>
