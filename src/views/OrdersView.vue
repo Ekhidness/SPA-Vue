@@ -20,7 +20,7 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: "Orders",
+  name: "OrdersView",
   computed: {
     ...mapGetters(["isAuthenticated"]),
     orders() {

@@ -27,25 +27,25 @@ const routes = [
   {
     path: "/login",
     name: "login",
-    component: () => import("../components/Login.vue"),
+    component: () => import("../views/LoginView.vue"),
     beforeEnter: ifNotAuthenticated,
   },
   {
     path: "/register",
     name: "register",
-    component: () => import("../components/Register.vue"),
+    component: () => import("../views/RegisterView.vue"),
     beforeEnter: ifNotAuthenticated,
   },
   {
     path: "/cart",
     name: "cart",
-    component: () => import("../components/Cart.vue"),
+    component: () => import("../views/CartView.vue"),
     beforeEnter: ifAuthenticated,
   },
   {
     path: "/orders",
     name: "orders",
-    component: () => import("../components/Orders.vue"),
+    component: () => import("../views/OrdersView.vue"),
     beforeEnter: ifAuthenticated,
   },
 ];

@@ -1,16 +1,7 @@
 <template>
-  <form class="register" @submit.prevent="register">
-    <h1>Регистрация</h1>
-    <label>ФИО</label>
-    <input
-      type="text"
-      required
-      v-model="form.fio"
-      :class="{ error: errors.fio }"
-    />
-    <span v-if="errors.fio" class="error-text">{{ errors.fio }}</span>
-
-    <label>Email</label>
+  <form class="login" @submit.prevent="login">
+    <h1>Логин</h1>
+    <label>Почта</label>
     <input
       type="email"
       required
@@ -19,7 +10,7 @@
     />
     <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
 
-    <label>Пароль</label>
+    <label>Password</label>
     <input
       type="password"
       required
@@ -29,40 +20,48 @@
     <span v-if="errors.password" class="error-text">{{ errors.password }}</span>
 
     <hr />
-    <button type="submit">Зарегистрироваться</button>
+    <button type="submit">Login</button>
     <button type="button" @click="goHome">Назад</button>
+    <router-link to="/register" class="nav-link">Регистрация</router-link>
   </form>
 </template>
 
 <script>
+import router from "@/router";
+
 export default {
   data() {
     return {
       form: {
-        fio: "",
         email: "",
         password: "",
       },
       errors: {
-        fio: "",
         email: "",
         password: "",
       },
     };
   },
   methods: {
-    register() {
-      this.errors = { fio: "", email: "", password: "" };
+    login() {
+      this.errors = { email: "", password: "" };
+      const userData = {
+        email: this.form.email,
+        password: this.form.password,
+      };
+
       this.$store
-        .dispatch("REGISTER_REQUEST", this.form)
-        .then(() => this.$router.push("/login"))
+        .dispatch("AUTH_REQUEST", userData)
+        .then(() => this.$router.push("/"))
         .catch((error) => {
-          if (
-            error.response &&
-            error.response.error &&
-            error.response.error.errors
-          ) {
-            this.errors = error.response.error.errors;
+          if (error.response && error.response.error) {
+            const serverError = error.response.error;
+            if (serverError.message === "Authentication failed") {
+              this.errors.email = "Неверный email или пароль";
+              this.errors.password = "Неверный email или пароль";
+            } else if (serverError.errors) {
+              this.errors = serverError.errors;
+            }
           }
         });
     },
@@ -74,14 +73,14 @@ export default {
 </script>
 
 <style scoped>
-.register {
+.login {
   display: flex;
   flex-direction: column;
   width: 300px;
   padding: 10px;
   margin: 0 auto;
 }
-.register input,
+.login input,
 button {
   border: 1px solid black;
   border-radius: 5px;

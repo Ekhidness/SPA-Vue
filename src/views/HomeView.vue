@@ -14,6 +14,11 @@
     <div v-if="products.length === 0">Загрузка товаров...</div>
     <div v-else class="products">
       <div v-for="product in products" :key="product.id" class="product-card">
+        <img
+          :src="getProductImageUrl(product)"
+          alt="Товар"
+          class="product-image"
+        />
         <h3>{{ product.name }}</h3>
         <p>{{ product.description }}</p>
         <p>Цена: {{ product.price }} ₽</p>
@@ -48,6 +53,12 @@ export default {
     addToCart(productId) {
       this.ADD_TO_CART(productId);
     },
+    getProductImageUrl(product) {
+      if (!product.image) {
+        return "https://via.placeholder.com/300x200?text=Нет+изображения";
+      }
+      return `http://lifestealer86.ru/${product.image}`;
+    },
   },
 };
 </script>
@@ -60,7 +71,6 @@ export default {
 .nav-links {
   display: flex;
   gap: 15px;
-  margin-bottom: 20px;
   padding: 10px;
   border-radius: 5px;
 }
@@ -85,7 +95,6 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .nav-button:hover {
@@ -99,7 +108,15 @@ export default {
   border-radius: 5px;
 }
 
-.product-card button {
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+button {
   background: #4caf50;
   color: white;
   border: none;
@@ -109,7 +126,7 @@ export default {
   margin-top: 10px;
 }
 
-.product-card button:hover {
+button:hover {
   background: #45a049;
 }
 
