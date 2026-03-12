@@ -15,13 +15,20 @@
       >
         <h3>{{ item.name }}</h3>
         <p>{{ item.description }}</p>
-        <p>Цена: {{ item.price }} ₽</p>
-        <p>Количество: {{ item.count }}</p>
+        <p>Цена за единицу: {{ item.price }} ₽</p>
+        <p>Количество: {{ item.count }} шт.</p>
+        <p>
+          <strong>Итого: {{ item.totalPrice }} ₽</strong>
+        </p>
         <div class="cart-controls">
           <button @click="decreaseQuantity(item.product_id)">-</button>
           <button @click="increaseQuantity(item.product_id)">+</button>
           <button @click="removeFromCart(item.product_id)">Удалить</button>
         </div>
+      </div>
+
+      <div class="cart-total">
+        <h2>Общая сумма: {{ totalSum }} ₽</h2>
       </div>
 
       <button @click="placeOrder" class="checkout-btn">Оформить заказ</button>
@@ -54,7 +61,13 @@ export default {
         }
         grouped[item.product_id].count++;
       });
-      return Object.values(grouped);
+      return Object.values(grouped).map((item) => ({
+        ...item,
+        totalPrice: item.price * item.count,
+      }));
+    },
+    totalSum() {
+      return this.groupedItems.reduce((sum, item) => sum + item.totalPrice, 0);
     },
   },
   mounted() {
@@ -120,6 +133,20 @@ export default {
 .cart-controls button {
   padding: 6px 12px;
   cursor: pointer;
+}
+
+.cart-total {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  text-align: right;
+}
+
+.cart-total h2 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
 }
 
 .checkout-btn {

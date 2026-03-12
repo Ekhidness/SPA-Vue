@@ -1,7 +1,16 @@
 <template>
-  <form class="login" @submit.prevent="login">
-    <h1>Логин</h1>
-    <label>Почта</label>
+  <form class="register" @submit.prevent="register">
+    <h1>Регистрация</h1>
+    <label>ФИО</label>
+    <input
+      type="text"
+      required
+      v-model="form.fio"
+      :class="{ error: errors.fio }"
+    />
+    <span v-if="errors.fio" class="error-text">{{ errors.fio }}</span>
+
+    <label>Email</label>
     <input
       type="email"
       required
@@ -15,53 +24,87 @@
       type="password"
       required
       v-model="form.password"
-      :class="{ error: errors.password }"
+      :class="{ error: errors.password || errors.passwordMismatch }"
     />
     <span v-if="errors.password" class="error-text">{{ errors.password }}</span>
 
+    <label>Подтвердите пароль</label>
+    <input
+      type="password"
+      required
+      v-model="confirmPassword"
+      :class="{ error: errors.confirmPassword || errors.passwordMismatch }"
+    />
+    <span
+      v-if="errors.confirmPassword || errors.passwordMismatch"
+      class="error-text"
+    >
+      {{ errors.confirmPassword || errors.passwordMismatch }}
+    </span>
+
     <hr />
-    <button type="submit">Login</button>
+    <button type="submit">Зарегистрироваться</button>
     <button type="button" @click="goHome">Назад</button>
-    <router-link to="/register" class="nav-link">Регистрация</router-link>
   </form>
 </template>
 
 <script>
-import router from "@/router";
-
 export default {
   data() {
     return {
       form: {
+        fio: "",
         email: "",
         password: "",
       },
+      confirmPassword: "",
       errors: {
+        fio: "",
         email: "",
         password: "",
+        confirmPassword: "",
+        passwordMismatch: "",
       },
     };
   },
   methods: {
-    login() {
-      this.errors = { email: "", password: "" };
-      const userData = {
-        email: this.form.email,
-        password: this.form.password,
+    register() {
+      this.errors = {
+        fio: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        passwordMismatch: "",
       };
+      let hasError = false;
 
+      if (!this.form.password.trim()) {
+        this.errors.password = "Поле обязательно для заполнения";
+        hasError = true;
+      }
+
+      if (!this.confirmPassword.trim()) {
+        this.errors.confirmPassword = "Поле обязательно для заполнения";
+        hasError = true;
+      }
+
+      if (this.form.password !== this.confirmPassword) {
+        this.errors.passwordMismatch = "Пароли не совпадают";
+        hasError = true;
+      }
+      if (hasError) {
+        return;
+      }
       this.$store
-        .dispatch("AUTH_REQUEST", userData)
-        .then(() => this.$router.push("/"))
+        .dispatch("REGISTER_REQUEST", this.form)
+        .then(() => this.$router.push("/login"))
         .catch((error) => {
-          if (error.response && error.response.error) {
-            const serverError = error.response.error;
-            if (serverError.message === "Authentication failed") {
-              this.errors.email = "Неверный email или пароль";
-              this.errors.password = "Неверный email или пароль";
-            } else if (serverError.errors) {
-              this.errors = serverError.errors;
-            }
+          if (
+            error.response &&
+            error.response.error &&
+            error.response.error.errors
+          ) {
+            this.errors = { ...this.errors, ...error.response.error.errors };
           }
         });
     },
@@ -73,14 +116,14 @@ export default {
 </script>
 
 <style scoped>
-.login {
+.register {
   display: flex;
   flex-direction: column;
   width: 300px;
   padding: 10px;
   margin: 0 auto;
 }
-.login input,
+.register input,
 button {
   border: 1px solid black;
   border-radius: 5px;
