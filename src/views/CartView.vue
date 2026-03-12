@@ -1,10 +1,11 @@
 <template>
   <div class="cart">
-    <button @click="goHome">Назад</button>
+    <h1>Корзина</h1>
 
-    <h2>Корзина</h2>
-
-    <div v-if="cartItems.length === 0">Корзина пуста</div>
+    <div v-if="cartItems.length === 0">
+      <p>Корзина пуста</p>
+      <router-link to="/">Перейти в каталог</router-link>
+    </div>
 
     <div v-else>
       <div
@@ -16,12 +17,15 @@
         <p>{{ item.description }}</p>
         <p>Цена: {{ item.price }} ₽</p>
         <p>Количество: {{ item.count }}</p>
-        <button @click="decreaseQuantity(item.product_id)">-</button>
-        <button @click="increaseQuantity(item.product_id)">+</button>
-        <button @click="removeFromCart(item.product_id)">Удалить</button>
+        <div class="cart-controls">
+          <button @click="decreaseQuantity(item.product_id)">-</button>
+          <button @click="increaseQuantity(item.product_id)">+</button>
+          <button @click="removeFromCart(item.product_id)">Удалить</button>
+        </div>
       </div>
 
-      <button @click="placeOrder">Оформить заказ</button>
+      <button @click="placeOrder" class="checkout-btn">Оформить заказ</button>
+      <router-link to="/" class="back-link">Вернуться в каталог</router-link>
     </div>
   </div>
 </template>
@@ -63,9 +67,6 @@ export default {
       "REMOVE_FROM_CART",
       "PLACE_ORDER",
     ]),
-    goHome() {
-      this.$router.push("/");
-    },
     increaseQuantity(productId) {
       this.ADD_TO_CART(productId);
     },
@@ -98,15 +99,52 @@ export default {
 .cart {
   padding: 20px;
 }
+
+.cart h1 {
+  margin-bottom: 20px;
+}
+
 .cart-item {
   border: 1px solid #ddd;
   padding: 15px;
   margin-bottom: 15px;
   border-radius: 5px;
 }
-button {
-  margin: 5px;
-  padding: 8px 16px;
+
+.cart-controls {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.cart-controls button {
+  padding: 6px 12px;
   cursor: pointer;
+}
+
+.checkout-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.checkout-btn:hover {
+  background: #45a049;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 15px;
+  color: #2196f3;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
 }
 </style>

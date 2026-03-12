@@ -1,15 +1,5 @@
 <template>
   <div class="home">
-    <div v-if="!isAuthenticated" class="nav-links">
-      <router-link to="/register" class="nav-link">Регистрация</router-link>
-      <router-link to="/login" class="nav-link">Вход</router-link>
-    </div>
-    <div v-else class="nav-links">
-      <button @click="logout" class="nav-button">Выход</button>
-      <router-link to="/cart" class="nav-link">Корзина</router-link>
-      <router-link to="/orders" class="nav-link">Мои заказы</router-link>
-    </div>
-
     <h2>Каталог товаров</h2>
     <div v-if="products.length === 0">Загрузка товаров...</div>
     <div v-else class="products">
@@ -19,10 +9,16 @@
           alt="Товар"
           class="product-image"
         />
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.description }}</p>
-        <p>Цена: {{ product.price }} ₽</p>
-        <button v-if="isAuthenticated" @click="addToCart(product.id)">
+        <div class="product-content">
+          <h3>{{ product.name }}</h3>
+          <p class="product-description">{{ product.description }}</p>
+          <p class="product-price">Цена: {{ product.price }} ₽</p>
+        </div>
+        <button
+          v-if="isAuthenticated"
+          @click="addToCart(product.id)"
+          class="add-to-cart-btn"
+        >
           Добавить в корзину
         </button>
       </div>
@@ -45,11 +41,7 @@ export default {
     this.FETCH_PRODUCTS();
   },
   methods: {
-    ...mapActions(["FETCH_PRODUCTS", "ADD_TO_CART", "LOGOUT"]),
-    logout() {
-      this.LOGOUT();
-      this.$router.push("/");
-    },
+    ...mapActions(["FETCH_PRODUCTS", "ADD_TO_CART"]),
     addToCart(productId) {
       this.ADD_TO_CART(productId);
     },
@@ -68,44 +60,25 @@ export default {
   padding: 20px;
 }
 
-.nav-links {
-  display: flex;
-  gap: 15px;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.nav-link {
-  padding: 8px 16px;
-  background-color: #2196f3;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.nav-link:hover {
-  background-color: #1976d2;
-}
-
-.nav-button {
-  padding: 8px 16px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.nav-button:hover {
-  background-color: #d32f2f;
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 .product-card {
   border: 1px solid #ddd;
   padding: 15px;
-  margin-bottom: 15px;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  min-height: 380px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .product-image {
@@ -116,23 +89,41 @@ export default {
   border-radius: 4px;
 }
 
-button {
+.product-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.product-description {
+  flex: 1;
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.product-price {
+  margin: 0;
+  font-weight: bold;
+  color: #333;
+  font-size: 16px;
+}
+
+.add-to-cart-btn {
   background: #4caf50;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 10px 16px;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: auto;
+  font-size: 14px;
+  transition: background 0.3s;
 }
 
-button:hover {
+.add-to-cart-btn:hover {
   background: #45a049;
-}
-
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
 }
 </style>

@@ -1,17 +1,19 @@
 <template>
   <div class="orders">
-    <button @click="goHome">Назад</button>
+    <h1>Оформленные заказы</h1>
 
-    <h2>Оформленные заказы</h2>
-
-    <div v-if="orders.length === 0">У вас нет заказов</div>
+    <div v-if="orders.length === 0">
+      <p>У вас нет заказов</p>
+      <router-link to="/">Перейти в каталог</router-link>
+    </div>
 
     <div v-else>
       <div v-for="order in orders" :key="order.id" class="order-item">
         <h3>Заказ #{{ order.id }}</h3>
-        <p>Товары: {{ order.products.join(", ") }}</p>
-        <p>Сумма: {{ order.order_price }} ₽</p>
+        <p><strong>Товары:</strong> {{ order.products.join(", ") }}</p>
+        <p><strong>Сумма:</strong> {{ order.order_price }} ₽</p>
       </div>
+      <router-link to="/" class="back-link">Вернуться в каталог</router-link>
     </div>
   </div>
 </template>
@@ -32,9 +34,6 @@ export default {
   },
   methods: {
     ...mapActions(["FETCH_ORDERS"]),
-    goHome() {
-      this.$router.push("/");
-    },
   },
 };
 </script>
@@ -43,15 +42,26 @@ export default {
 .orders {
   padding: 20px;
 }
+
+.orders h1 {
+  margin-bottom: 20px;
+}
+
 .order-item {
   border: 1px solid #ddd;
   padding: 15px;
   margin-bottom: 15px;
   border-radius: 5px;
 }
-button {
-  margin-bottom: 20px;
-  padding: 8px 16px;
-  cursor: pointer;
+
+.back-link {
+  display: inline-block;
+  margin-top: 15px;
+  color: #2196f3;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
 }
 </style>
