@@ -1,13 +1,13 @@
 <template>
   <div class="home">
-    <div v-if="!isAuthenticated">
-      <router-link to="/register">Регистрация</router-link>
-      <router-link to="/login">Вход</router-link>
+    <div v-if="!isAuthenticated" class="nav-links">
+      <router-link to="/register" class="nav-link">Регистрация</router-link>
+      <router-link to="/login" class="nav-link">Вход</router-link>
     </div>
-    <div v-else>
-      <button @click="logout">Выход</button>
-      <router-link to="/cart">Корзина</router-link>
-      <router-link to="/orders">Мои заказы</router-link>
+    <div v-else class="nav-links">
+      <button @click="logout" class="nav-button">Выход</button>
+      <router-link to="/cart" class="nav-link">Корзина</router-link>
+      <router-link to="/orders" class="nav-link">Мои заказы</router-link>
     </div>
 
     <h2>Каталог товаров</h2>
@@ -56,13 +56,50 @@ export default {
 .home {
   padding: 20px;
 }
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.nav-link {
+  padding: 8px 16px;
+  background-color: #2196f3;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: #1976d2;
+}
+
+.nav-button {
+  padding: 8px 16px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+  background-color: #d32f2f;
+}
+
 .product-card {
   border: 1px solid #ddd;
   padding: 15px;
   margin-bottom: 15px;
   border-radius: 5px;
 }
-button {
+
+.product-card button {
   background: #4caf50;
   color: white;
   border: none;
@@ -71,9 +108,11 @@ button {
   cursor: pointer;
   margin-top: 10px;
 }
-button:hover {
+
+.product-card button:hover {
   background: #45a049;
 }
+
 .products {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

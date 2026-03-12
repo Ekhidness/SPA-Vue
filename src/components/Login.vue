@@ -20,7 +20,7 @@
     <span v-if="errors.password" class="error-text">{{ errors.password }}</span>
 
     <hr />
-    <button type="submit">Login</button>
+    <button type="submit">Войти</button>
     <button type="button" @click="goHome">Назад</button>
   </form>
 </template>
